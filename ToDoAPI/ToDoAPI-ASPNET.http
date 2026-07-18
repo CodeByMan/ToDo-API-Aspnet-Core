@@ -1,0 +1,100 @@
+@host = http://localhost:5118
+@apiVersion = 1
+@accessToken = REPLACE_WITH_ACCESS_TOKEN
+@refreshToken = REPLACE_WITH_REFRESH_TOKEN
+
+### Register
+POST {{host}}/api/v{{apiVersion}}/auth/register
+Content-Type: application/json
+
+{
+  "email": "developer@example.com",
+  "username": "developer",
+  "firstName": "Muhammad",
+  "lastName": "Nawaz",
+  "password": "StrongPass123!",
+  "rePassword": "StrongPass123!"
+}
+
+### Login
+POST {{host}}/api/v{{apiVersion}}/auth/login
+Content-Type: application/json
+
+{
+  "email": "developer@example.com",
+  "password": "StrongPass123!"
+}
+
+### Rotate refresh token
+POST {{host}}/api/v{{apiVersion}}/auth/refresh
+Content-Type: application/json
+
+{
+  "token": "{{refreshToken}}"
+}
+
+### Current user
+GET {{host}}/api/v{{apiVersion}}/users/me
+Authorization: Bearer {{accessToken}}
+
+### Create task
+# @name createTask
+POST {{host}}/api/v{{apiVersion}}/toDoItems
+Authorization: Bearer {{accessToken}}
+Content-Type: application/json
+
+{
+  "title": "Prepare portfolio",
+  "description": "Document and test the API",
+  "isComplete": false,
+  "dueDate": "2026-08-01T12:00:00Z"
+}
+
+### Get all owned tasks
+GET {{host}}/api/v{{apiVersion}}/toDoItems
+Authorization: Bearer {{accessToken}}
+
+### Get one owned task
+GET {{host}}/api/v{{apiVersion}}/toDoItems/{{createTask.response.body.$.data.id}}
+Authorization: Bearer {{accessToken}}
+
+### Update one owned task
+PUT {{host}}/api/v{{apiVersion}}/toDoItems/{{createTask.response.body.$.data.id}}
+Authorization: Bearer {{accessToken}}
+Content-Type: application/json
+
+{
+  "title": "Prepare ASP.NET portfolio",
+  "description": "Document, test, and publish the API",
+  "isComplete": true,
+  "dueDate": "2026-08-02T12:00:00Z"
+}
+
+### Batch status update
+PATCH {{host}}/api/v{{apiVersion}}/toDoItems
+Authorization: Bearer {{accessToken}}
+Content-Type: application/json
+
+{
+  "itemIds": [1, 2],
+  "newStatus": true
+}
+
+### Delete one owned task
+DELETE {{host}}/api/v{{apiVersion}}/toDoItems/{{createTask.response.body.$.data.id}}
+Authorization: Bearer {{accessToken}}
+
+### Batch delete
+DELETE {{host}}/api/v{{apiVersion}}/toDoItems
+Authorization: Bearer {{accessToken}}
+Content-Type: application/json
+
+[1, 2]
+
+### Logout and revoke refresh token
+POST {{host}}/api/v{{apiVersion}}/auth/logout
+Content-Type: application/json
+
+{
+  "token": "{{refreshToken}}"
+}
