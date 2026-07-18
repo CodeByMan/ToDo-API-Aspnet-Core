@@ -22,8 +22,6 @@
 |---|---|
 | ![ToDo API Swagger documentation](docs/screenshots/swagger.png) | ![ToDo API endpoints](docs/screenshots/api.png) |
 
-> This repository is an **API-only backend**. Swagger is included for API discovery and testing, but no React, Angular, Vue, Next.js, Blazor, or other user-facing frontend is bundled.
-
 ---
 
 ## 🚀 Project Overview
@@ -31,8 +29,6 @@
 **ToDo API** is a secure REST API for managing private, user-owned tasks. Users can register, log in, rotate refresh tokens, retrieve their profile, and create, read, update, complete, or delete their own to-do items.
 
 The application uses a layered ASP.NET Core architecture with controllers, services, repositories, AutoMapper profiles, Entity Framework Core, and SQL Server. Authentication is handled with short-lived JWT access tokens and rotating refresh tokens. Passwords are hashed with BCrypt, refresh tokens are stored as SHA-256 hashes, and protected endpoints reject refresh tokens when they are incorrectly used as bearer credentials.
-
-The API is versioned under `/api/v1`, documented with Swagger/OpenAPI, supported by five Entity Framework Core migrations, and verified by **13 passing automated tests**.
 
 ---
 
@@ -807,61 +803,6 @@ Authorization: Bearer YOUR_ACCESS_TOKEN
 ```
 
 Use the access token—not the refresh token—in Swagger's **Authorize** dialog.
-
----
-
-## ⚠️ Known Limitations
-
-- This repository contains no user-facing frontend application.
-- Swagger is intended for development documentation and testing, not as an end-user task interface.
-- Roles and administrator permissions are not implemented.
-- Email verification and password-reset workflows are not implemented.
-- Task paging, searching, sorting, and advanced filtering are not implemented.
-- Rate limiting, audit logs, monitoring, and centralized secret management are not included.
-- The local Docker configuration is intended for development and portfolio demonstration.
-
-A future React, Angular, Next.js, Vue, or Blazor client can consume the existing versioned endpoints without changing the core backend architecture.
-
----
-
-## 📦 Release Build Verification
-
-Create a release output outside tracked source directories:
-
-```powershell
-Set-Location -LiteralPath $ApiRoot
-
-$PublishDirectory = Join-Path $env:TEMP 'ToDoAPI-Publish'
-
-Remove-Item `
-    -LiteralPath $PublishDirectory `
-    -Recurse `
-    -Force `
-    -ErrorAction SilentlyContinue
-
-dotnet publish `
-    $ProjectFile `
-    --configuration Release `
-    --output $PublishDirectory
-```
-
-Review repository cleanliness:
-
-```powershell
-Set-Location -LiteralPath $RepoRoot
-
-git status
-git ls-files |
-    Select-String '\\bin\\|\\obj\\|\.env$|\.mdf$|\.ldf$'
-```
-
-The command should not report generated build directories, private `.env` data, or local SQL Server files as tracked content.
-
----
-
-## 💼 Resume-Ready Summary
-
-> Built and secured a versioned ASP.NET Core 8 task-management REST API using Entity Framework Core, SQL Server, layered controller/service/repository architecture, JWT access tokens, rotating SHA-256-hashed refresh tokens, BCrypt password hashing, per-user resource ownership, batch task operations, Swagger documentation, Docker Compose, and 13 passing xUnit integration and service tests.
 
 ---
 
